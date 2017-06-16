@@ -1,5 +1,51 @@
 (function(){
 
+    
+    // set up the data table attributes:
+       $('#studentTable').DataTable({
+        colReorder: true,
+        "scrollX": true,
+        dom: 'Bfrtlip',
+           
+        buttons: [
+            'copy',
+            'excel',
+            'csv',
+            'pdf',
+            'print'
+        ]
+
+    });
+       
+    // set the validations for the create/update form
+     let validator = $("#manageStudentForm").validate({
+            errorClass: "text-danger bg-danger",
+            rules: {
+                last_name: {
+                    required: true,
+                    minlength: 2
+                },
+                first_name: {
+                    required: true,
+                    minlength: 2
+                },
+                start_date: {
+                    dateISO: true
+                }, 
+                sat: {
+                    required: true,
+                    digits: true
+                }
+            },
+            messages: {
+                first_name: "Enter at least 2 characters for First Name",
+                last_name: "Enter at least 2 characters for Last Name",
+                start_date: "Enter a date in YYYY-MM-DD formate",
+                sat: "Enter a numeric value for SAT score"
+            }
+
+        });
+    
   //function to delete record by settin id on form and then submitting the form
   //sets value of student id in hidden delete form and submits form
   //not completely ideal but wanted to take advantage of flash messages in sails
@@ -29,6 +75,8 @@
         modal: true,
         buttons: {
           Cancel: function() {
+            document.getElementById("manageStudentForm").reset();
+            validator.resetForm();
             $( this ).dialog( "close" );
           },
           "Submit": function() {
@@ -48,9 +96,11 @@
       //populate form when api call is done (after we get student to edit)
       student.done(function(data){
         $.each(data, function(name, val){
-            var $el = $('[name="'+name+'"]'),
-                type = $el.attr('type');
-
+            var $el = $('[name="'+name+'"]');
+            var type = $el.attr('type');
+            if (name == 'major_id') {
+                val = val.major_id;
+            }
             switch(type){
                 case 'checkbox':
                     $el.attr('checked', 'checked');
@@ -59,7 +109,7 @@
                     $el.filter('[value="'+val+'"]').attr('checked', 'checked');
                     break;
                 default:
-                    $el.val(val);
+                    $el.val(val).change();
             }
         });
       })
@@ -70,6 +120,8 @@
         modal: true,
         buttons: {
           Cancel: function() {
+            document.getElementById("manageStudentForm").reset();
+            validator.resetForm();
             $( this ).dialog( "close" );
           },
           Submit: function() {
