@@ -1,5 +1,6 @@
 <ol class="breadcrumb">
-    <li class="active">Home</a></li>
+    <li class="active"><a href="/">Home</a></li>
+    <li>Student Classes</li>
 </ol>
 
 <br/>
@@ -43,10 +44,10 @@
   <div class="form-group">
     <label for="student_id" class="col-sm-2 control-label">Student ID</label>
     <div class="col-sm-10">
-    <select id="student_id" name="student_id" class="selectpicker" placehoder="Nothing selected">
+    <select id="student_id" name="student_id" class="selectpicker" required>
         <option value="" selected disabled>Select a student</option>
     <% if(typeof students != "undefined" && students.length > 0){ %>
-      <% studentss.forEach(function(student){ %>
+      <% students.forEach(function(student){ %>
         <option value="<%= student.student_id %>">
           <%= student.first_name + " " + student.last_name %>
         </option>
@@ -58,7 +59,7 @@
   <div class="form-group">
     <label for="class_id" class="col-sm-2 control-label">Class ID</label>
     <div class="col-sm-10">
-    <select id="class_id" name="class_id" class="selectpicker" placehoder="Nothing selected">
+    <select id="class_id" name="class_id" class="selectpicker" required>
         <option value="" selected disabled>Select a class</option>
     <% if(typeof classs != "undefined" && classs.length > 0){ %>
       <% classs.forEach(function(_class){ %>

@@ -155,7 +155,7 @@ module.exports.routes = {
     'GET /manage_student_classs': {controller: 'GenericController',
                            action: 'readwdata',
                            viewName: 'student_class',
-                        addModels: ['major', 'class']},
+                        addModels: ['student', 'class']},
     'POST /update_student_class': {controller: 'GenericController',
                            action: 'update',
                           viewName: 'student_class'},

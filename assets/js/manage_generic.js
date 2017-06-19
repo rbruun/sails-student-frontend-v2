@@ -1,21 +1,6 @@
 (function(){
 
-    
-    // set up the data table attributes:
-       $('#modelTable').DataTable({
-        colReorder: true,
-        "scrollX": true,
-        dom: 'Bfrtlip',
-           
-        buttons: [
-            'copy',
-            'excel',
-            'csv',
-            'pdf',
-            'print'
-        ]
 
-    });
        
     // set the validations for the create/update form
      let validator = $("#manageModelForm").validate({
@@ -24,6 +9,17 @@
                 grade: {
                     required: true,
                     minlength: 2
+                },
+                last_name: {
+                    required: true,
+                    minlength: 2
+                },
+                first_name: {
+                    required: true,
+                    minlength: 2
+                },
+                start_date: {
+                    dateISO: true
                 }
             },
             messages: {
@@ -46,6 +42,23 @@
   }
 
   $(function(){
+      
+          
+    // set up the data table attributes:
+       $('#modelTable').DataTable({
+        colReorder: true,
+        "scrollX": true,
+        dom: 'Bfrtlip',
+           
+        buttons: [
+            'copy',
+            'excel',
+            'csv',
+            'pdf',
+            'print'
+        ]
+
+    });
 
     //initialize variables for items in the DOM we will work with
     let manageModelForm = $("#manageModelForm");

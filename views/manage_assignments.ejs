@@ -1,6 +1,7 @@
 <ol class="breadcrumb">
-    <li class="active">Home</a>
+    <li class="active"><a href="/">Home</a>
     </li>
+    <li>Assignments</li>
 </ol>
 
 <br/>
@@ -40,7 +41,7 @@
                             <%= modelRec.hasOwnProperty('class_id') ? modelRec.class_id.subject + " " + modelRec.class_id.course : "" %>
                         </td>
                         <td class="text-center" style="white-space: nowrap;">
-                            <button class="btn btn-primary" id="editButton" data-model="assignemnt" data-modelid="<%= modelRec.assignment_id %>">edit</button>&nbsp<button class="btn btn-danger" id="deleteButton" data-model="assignment" data-modelid="<%= modelRec.assignemnt_id %>">delete</button>
+                            <button class="btn btn-primary" id="editButton" data-model="assignment" data-modelid="<%= modelRec.assignment_id %>">edit</button>&nbsp<button class="btn btn-danger" id="deleteButton" data-model="assignment" data-modelid="<%= modelRec.assignment_id %>">delete</button>
                         </td>
                     </tr>
                     <% }) %>
@@ -65,7 +66,7 @@
         <div class="form-group">
             <label for="student_id" class="col-sm-2 control-label">Student</label>
             <div class="col-sm-10">
-                <select id="major_id" name="major_id" class="selectpicker" placehoder="Nothing selected">
+                <select id="student_id" name="student_id" class="selectpicker" placehoder="Nothing selected">
         <option value="" selected disabled>Select a student</option>
     <% if(typeof students != "undefined" && students.length > 0){ %>
       <% students.forEach(function(student){ %>
@@ -83,9 +84,9 @@
                 <select id="class_id" name="class_id" class="selectpicker" placehoder="Nothing selected">
         <option value="" selected disabled>Select a class</option>
     <% if(typeof classs != "undefined" && classs.length > 0){ %>
-      <% classs.forEach(function(_class){ %>
-        <option value="<%= _class.class_id %>">
-          <%= _class.subject %>
+      <% classs.forEach(function(thisclass){ %>
+        <option value="<%= thisclass.class_id %>">
+          <%= thisclass.subject + " " + thisclass.course %>
         </option>
       <% }) %>
     <% } %>

@@ -13,11 +13,9 @@ var client = new Client();
 //var managedModel = req.param('model');
 var managedModel;
 var endpoint = "http://localhost:1337/";
-var view = "manage_" + managedModel + "s";
-var idField = managedModel + "_id";
+///var view = "manage_" + managedModel + "s";
 
 function clean_request_body(request_body) {
-    console.log(request_body);
     return JSON.parse(JSON.stringify(request_body).replace(/\"\"/g, null))
 }
 
@@ -77,33 +75,34 @@ module.exports = {
      */
     readwdata: function (req, res) {
         managedModel = req.options.viewName;
-        let returndata = new Object();
         let promises = [];
         if (typeof req.options.addModels != "undefined") {
             let addModels = req.options.addModels;
-            console.log("additional views: " + addModels.length);
             for (let i = 0; i < addModels.length; i++) {
                 let model = addModels[i] ;
                 // create a promise so the page doesn't try to load before the majors list is returned
                 let p1 = new Promise(
                     (resolve, reject) => {
                         client.get("http://localhost:1337/" + model, function (data, response) {
-console.log("inside promise");
-console.log(data);
-                            returndata[model+ "s"] = data;
+                            resolve([model,data]);
                         });
                     }
                 )
                 promises.push(p1);
             }
-            console.log(returndata);
         }
-        // don't try to get the model data until know the referenced data has come back
-        Promise.all(promises).then(
+        
+        // don't try to get the model data until all the referenced data has come back
+        Promise.all(promises).then( values => {          
             client.get(endpoint + managedModel, function (data, response) {
-                returndata.modelData = data;
-                console.log(returndata);
-                return res.view("manage_" + managedModel + "s", returndata
+                returnData = new Object();
+                // loop through the data returned from the promises and add to object sent to page
+                for (let i=0; i < values.length; i++) {
+                    returnData[values[i][0] + "s"] = values[i][1];
+                }
+                returnData.modelData = data;
+
+                return res.view("manage_" + managedModel + "s", returnData
                 );
             }).on('error', function (err) {
                 return res.view("manage_" + managedModel + "s", {
@@ -112,7 +111,9 @@ console.log(data);
                     }
                 })
             })
+        }
         )
+        
     },
     /**
      * `GenericController.update()`
