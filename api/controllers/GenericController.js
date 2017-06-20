@@ -50,37 +50,17 @@ module.exports = {
 
 
     /**
-     * `GenericController.read()`
-     */
-    read: function (req, res) {
-        managedModel = req.options.viewName;
-        client.get(endpoint + managedModel, function (data, response) {
-            return res.view("manage_" + managedModel + "s", {
-                modelData: data
-            });
-        }).on('error', function (err) {
-            return res.view("manage_" + managedModel + "s", {
-                error: {
-                    message: "There was an error getting the " + managedModel + "s"
-                }
-            })
-        })
-
-    },
-
-
-    /**
      * `GenericController.readwmajors()`
      *  this will return the requested model as well as list of related model data
      */
-    readwdata: function (req, res) {
+    read: function (req, res) {
         managedModel = req.options.viewName;
         let promises = [];
         if (typeof req.options.addModels != "undefined") {
             let addModels = req.options.addModels;
             for (let i = 0; i < addModels.length; i++) {
                 let model = addModels[i] ;
-                // create a promise so the page doesn't try to load before the majors list is returned
+                // create a promise so the page doesn't try to load before the supporting data is returned
                 let p1 = new Promise(
                     (resolve, reject) => {
                         client.get("http://localhost:1337/" + model, function (data, response) {
@@ -96,8 +76,9 @@ module.exports = {
         Promise.all(promises).then( values => {          
             client.get(endpoint + managedModel, function (data, response) {
                 returnData = new Object();
-                // loop through the data returned from the promises and add to object sent to page
+                // loop through the data returned from the promises and add to the object senxt to the page
                 for (let i=0; i < values.length; i++) {
+                    // above promises each resolve to a name/value pair that were put in a an array 
                     returnData[values[i][0] + "s"] = values[i][1];
                 }
                 returnData.modelData = data;
